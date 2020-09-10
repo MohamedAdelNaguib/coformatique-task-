@@ -17,6 +17,10 @@ const MessageSchema = new Schema({
   recieverEmail :{
       type:String,
       required: true
+  },
+  seen : {
+    type: Boolean,
+    default: false
   }
 })
 

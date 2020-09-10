@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Model = require('../models/Message')
 const validator = require('../validations/messageValidation')
 // get all messages
@@ -20,7 +21,6 @@ exports.default = async (req, res) => {
 exports.create = async (req, res) => {
   const entityName = Model.collection.name
   const data = getBody(req, res)
-  console.log(data)
   if (!data) {
     return
   }
@@ -43,6 +43,56 @@ exports.create = async (req, res) => {
     })
   }
 }
+// update message
+exports.update = async (req, res,) => {
+  const entityName = Model.collection.name
+  const data = getBody(req, res)
+  if (!data) {
+    return
+  }
+
+  try {
+    const entityId = req.params.id
+    const validated = isValidated(res, data, validator.updateValidation)
+    if (!validated) {
+      return
+    }
+    const updatedEntity = await findByIdAndUpdate(res, entityId, data)
+    if (!updatedEntity) {
+      return
+    }
+
+    return res.json({
+      status: 'Success',
+      message: `Updated ${entityName} with id ${entityId}`,
+      data: updatedEntity
+    })
+  } catch (error) {
+    return res.status(400).json({
+      status: 'Error',
+      message: error.message
+    })
+  }
+}
+// functionality of the update 
+const findByIdAndUpdate = exports.findByIdAndUpdate = async (res,entityId, data) => {
+  const entityName = Model.collection.name
+  const isValidId = validId(res, entityId)
+  if (!isValidId) {
+    return false
+  }
+
+  const query = { '_id': entityId }
+  const updatedEntity = await Model.findByIdAndUpdate(query, data, { new: true })
+  if (!updatedEntity) {
+    res.status(400).json({
+      status: 'Error',
+      message: `Could not find the ${entityName} you are looking for!`
+    })
+    return false
+  }
+  return updatedEntity
+}
 
 // function to check if the body is empty for all the CRUDs
 const getBody = exports.getBody = (req, res) => {
@@ -63,6 +113,18 @@ const isValidated = exports.isValidated = (res, data, validationFunction) => {
       status: 'Error',
       message: validationResult.error.details[0].message,
       data: data
+    })
+    return false
+  }
+  return true
+}
+// checking the id of the entity
+const validId = exports.validId = (res, entityId) => {
+  const entityName = Model.collection.name
+  if (!mongoose.Types.ObjectId.isValid(entityId)) {
+    res.status(400).json({
+      status: 'Error',
+      message: `Not a valid ID for ${entityName}`
     })
     return false
   }

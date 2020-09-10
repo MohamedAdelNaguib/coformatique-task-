@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('mongoose')
 
 const app = express()
 
@@ -21,7 +22,14 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('homepage')
 })
+// DB Config
+const db = require('./config/keys').mongoURI
 
+// Connect to mongo
+mongoose
+  .connect(db, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.log(err))
 
 // 500 internal server error handler
 app.use((err, _req, res, next) => {

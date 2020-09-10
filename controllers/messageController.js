@@ -43,7 +43,7 @@ exports.create = async (req, res) => {
     })
   }
 }
-// update message
+// edit message
 exports.update = async (req, res,) => {
   const entityName = Model.collection.name
   const data = getBody(req, res)
@@ -74,14 +74,14 @@ exports.update = async (req, res,) => {
     })
   }
 }
-// functionality of the update 
+// helper method for the update function
 const findByIdAndUpdate = exports.findByIdAndUpdate = async (res,entityId, data) => {
   const entityName = Model.collection.name
   const isValidId = validId(res, entityId)
   if (!isValidId) {
     return false
   }
-
+  
   const query = { '_id': entityId }
   const updatedEntity = await Model.findByIdAndUpdate(query, data, { new: true })
   if (!updatedEntity) {
@@ -92,6 +92,50 @@ const findByIdAndUpdate = exports.findByIdAndUpdate = async (res,entityId, data)
     return false
   }
   return updatedEntity
+}
+
+// delete fuction
+exports.delete = async (req, res) => {
+  const entityName = Model.collection.name
+  try {
+    const entityId = req.params.id
+    const deletedEntity = await findByIdAndRemove(res, entityId)
+    if (!deletedEntity) {
+      return
+    }
+
+    return res.json({
+      status: 'Success',
+      message: `Deleted ${entityName} with id ${entityId}`,
+      deleted: deletedEntity,
+      remaining: await Model.find()
+    })
+  } catch (error) {
+    return res.status(400).json({
+      status: 'Error',
+      message: error.message
+    })
+  }
+}
+
+// helper method for the delete function
+const findByIdAndRemove = exports.findByIdAndRemove = async (res, entityId) => {
+  const entityName = Model.collection.name
+  const isValidId = validId(res, entityId)
+  if (!isValidId) {
+    return false
+  }
+
+  const removedEntity = await Model.findByIdAndRemove(entityId)
+  if (!removedEntity) {
+    res.status(400).json({
+      status: 'Error',
+      message: `${entityName} not found`,
+      available: await Model.find()
+    })
+    return false
+  }
+  return removedEntity
 }
 
 // function to check if the body is empty for all the CRUDs

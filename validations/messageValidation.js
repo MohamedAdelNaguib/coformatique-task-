@@ -12,7 +12,8 @@ module.exports = {
     },
     updateValidation: req => {
       const createSchema =  Joi.object ({
-        content: Joi.string()
+        content: Joi.string(),
+        seen: Joi.boolean().required()
         
       })
       return createSchema.validate(req)

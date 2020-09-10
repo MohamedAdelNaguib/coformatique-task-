@@ -1,14 +1,26 @@
 const express = require('express')
 const mongoose = require('mongoose')
 
-const app = express()
+
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+// Require Router Handlers
 
+const messages = require('./routes/api/messages')
+const app = express()
 // Init middleware
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+
+// DB Config
+const db = require('./config/keys').mongoURI
+// Connect to mongoDB
+mongoose
+  .connect(db, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.log(err))
 
 // added cors access
 app.use((req, res, next) => {
@@ -19,17 +31,14 @@ app.use((req, res, next) => {
   next()
 })
 
+// Direct routes to appropriate files
+app.use('/api/messages', messages)
 app.get('/', (req, res) => {
   res.send('homepage')
 })
-// DB Config
-const db = require('./config/keys').mongoURI
 
-// Connect to mongo
-mongoose
-  .connect(db, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.log(err))
+
+
 
 // 500 internal server error handler
 app.use((err, _req, res, next) => {

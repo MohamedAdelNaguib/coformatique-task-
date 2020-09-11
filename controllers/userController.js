@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const tokenKey = require('../config/keys').secretOrKey
 const passwordRegx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/
 const Model = require('../models/User')
 const helperFunctions = require('./helperFunctions')
@@ -7,7 +9,7 @@ const validator = require('../validations/userValidation')
 
 
 //sign up
-exports.create = async (req, res) => {
+exports.signUp = async (req, res) => {
     const entityName = Model.collection.name
     const data = helperFunctions.getBody(req, res)
     if (!data) {
@@ -62,4 +64,49 @@ const vaildatePassword = password => {
       errors.push('Your password must contain at least one digit.')
     }
     return errors
+  }
+// login 
+exports.login = async (req, res) => {
+    try {
+        const data = helperFunctions.getBody(req, res)
+        if (!data) {
+          return
+        }
+      const validated = helperFunctions.isValidated(res, data, validator.SignInValidation)
+      if (!validated) {
+        return
+      }
+      const { email, password } = req.body
+      const user = await Model.findOne({ email })
+      if (!user) {
+        return res.status(404).json({
+          status: 'Error',
+          message: 'You must sign up first'
+        })
+      }
+      const match = bcrypt.compareSync(password, user.password)
+      if (match) {
+        const payload = {
+          id: user._id,
+          firstName: user.firstName,
+          email: user.email
+        }
+        const token = jwt.sign(payload, tokenKey, { expiresIn: '2h' })
+        return res.json({
+          status: 'Success',
+          token: `Bearer ${token}`,
+          id: user._id,
+        })
+      } else {
+        return res.status(400).json({
+          status: 'Error',
+          message: 'Wrong password'
+        })
+      }
+    } catch (error) {
+      return res.status(400).json({
+        status: 'Error',
+        message: error.message
+      })
+    }
   }

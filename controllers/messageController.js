@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Model = require('../models/Message')
 const validator = require('../validations/messageValidation')
+const helperFunctions = require('./helperFunctions')
 // get all messages
 exports.default = async (req, res) => {
   try{
@@ -20,13 +21,13 @@ exports.default = async (req, res) => {
 // create message
 exports.create = async (req, res) => {
   const entityName = Model.collection.name
-  const data = getBody(req, res)
+  const data = helperFunctions.getBody(req, res)
   if (!data) {
     return
   }
 
   try {
-    const validated = isValidated(res, data, validator.createValidation)
+    const validated = helperFunctions.isValidated(res, data, validator.createValidation)
     if (!validated) {
       return
     }
@@ -46,14 +47,14 @@ exports.create = async (req, res) => {
 // edit message
 exports.update = async (req, res,) => {
   const entityName = Model.collection.name
-  const data = getBody(req, res)
+  const data = helperFunctions.getBody(req, res)
   if (!data) {
     return
   }
 
   try {
     const entityId = req.params.id
-    const validated = isValidated(res, data, validator.updateValidation)
+    const validated = helperFunctions.isValidated(res, data, validator.updateValidation)
     if (!validated) {
       return
     }
@@ -138,30 +139,6 @@ const findByIdAndRemove = exports.findByIdAndRemove = async (res, entityId) => {
   return removedEntity
 }
 
-// function to check if the body is empty for all the CRUDs
-const getBody = exports.getBody = (req, res) => {
-  if (Object.keys(req.body).length === 0) {
-    res.status(400).json({
-      status: 'Error',
-      message: `Nothing was not entered in body`
-    })
-    return false
-  }
-  return req.body
-}
-// server side validation
-const isValidated = exports.isValidated = (res, data, validationFunction) => {
-  const validationResult = validationFunction(data)
-  if (validationResult.error) {
-    res.status(400).json({
-      status: 'Error',
-      message: validationResult.error.details[0].message,
-      data: data
-    })
-    return false
-  }
-  return true
-}
 // checking the id of the entity
 const validId = exports.validId = (res, entityId) => {
   const entityName = Model.collection.name

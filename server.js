@@ -1,4 +1,5 @@
 const express = require('express')
+const { required } = require('joi')
 const mongoose = require('mongoose')
 
 
@@ -9,6 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 // Require Router Handlers
 
 const messages = require('./routes/api/messages')
+const users = require('./routes/api/users')
 const app = express()
 // Init middleware
 app.use(express.json())
@@ -33,6 +35,8 @@ app.use((req, res, next) => {
 
 // Direct routes to appropriate files
 app.use('/api/messages', messages)
+app.use('/api/users', users)
+
 app.get('/', (req, res) => {
   res.send('homepage')
 })

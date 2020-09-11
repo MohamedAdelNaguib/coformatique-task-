@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const MessageSchema = new Schema({
+const messageSchema = new Schema({
   content: {
     type: String,
     required: true
@@ -21,7 +21,11 @@ const MessageSchema = new Schema({
   seen : {
     type: Boolean,
     default: false
+  },
+  reply: {
+    type: String
   }
+
 })
 
-module.exports = mongoose.model('Message', MessageSchema, 'message')
+module.exports = mongoose.model('Message', messageSchema, 'message')

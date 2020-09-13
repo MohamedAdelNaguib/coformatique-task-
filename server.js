@@ -1,6 +1,6 @@
 const express = require('express')
-const { required } = require('joi')
 const mongoose = require('mongoose')
+const passport = require('passport')
 
 
 
@@ -15,6 +15,7 @@ const app = express()
 // Init middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(passport.initialize())
 
 // DB Config
 const db = require('./config/keys').mongoURI

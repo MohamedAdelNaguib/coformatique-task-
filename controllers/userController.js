@@ -3,8 +3,10 @@ const jwt = require('jsonwebtoken')
 const tokenKey = require('../config/keys').secretOrKey
 const passwordRegx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/
 const Model = require('../models/User')
+const Message = require('../models/Message')
 const helperFunctions = require('./helperFunctions')
 const validator = require('../validations/userValidation')
+const mongoose = require('mongoose')
 
 
 
@@ -110,3 +112,37 @@ exports.login = async (req, res) => {
       })
     }
   }
+// show my messages
+exports.showMyMessages =  async (req,res) =>{
+try{
+  const entityId = req.params.id
+  const isValidId = validId(res, entityId)
+  if (!isValidId) {
+    return false
+  }
+  let user = await Model.findById(entityId)
+  let email = user.email
+  const query = { 'recieverEmail': email }
+  let messages= await Message.find(query)
+  return res.json({
+    status: 'Success',
+    data: messages
+  })
+}catch(error){
+  return res.status(400).json({
+    status: 'Error',
+    message: error.message
+  })
+}
+}
+const validId = exports.validId = (res, entityId) => {
+  const entityName = Model.collection.name
+  if (!mongoose.Types.ObjectId.isValid(entityId)) {
+    res.status(400).json({
+      status: 'Error',
+      message: `Not a valid ID for ${entityName}`
+    })
+    return false
+  }
+  return true
+}

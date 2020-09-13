@@ -113,7 +113,7 @@ exports.login = async (req, res) => {
     }
   }
 // show my messages
-exports.showMyMessages =  async (req,res) =>{
+exports.showMyRecievedMessages =  async (req,res) =>{
 try{
   const entityId = req.params.id
   const isValidId = validId(res, entityId)

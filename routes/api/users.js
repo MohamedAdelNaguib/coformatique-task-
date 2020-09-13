@@ -8,7 +8,7 @@ const controller = require('../../controllers/userController')
 router.post('/',controller.signUp)
 // sign in
 router.put('/login',controller.login)
-router.get('/showMyMessages/:id',  passport.authenticate('jwt', { session: false }),controller.showMyMessages)
+router.get('/showMyRecievedMessages/:id',  passport.authenticate('jwt', { session: false }),controller.showMyRecievedMessages)
 
 // router.put('/:id', controller.update)
 // router.delete('/:id', controller.delete)

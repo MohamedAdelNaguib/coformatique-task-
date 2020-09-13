@@ -1,9 +1,29 @@
 const express = require('express')
+const mongoose = require('mongoose')
+const passport = require('passport')
 
+
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+// Require Router Handlers
+
+const messages = require('./routes/api/messages')
+const users = require('./routes/api/users')
 const app = express()
-
 // Init middleware
 app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(passport.initialize())
+
+// DB Config
+const db = require('./config/keys').mongoURI
+// Connect to mongoDB
+mongoose
+  .connect(db, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.log(err))
 
 // added cors access
 app.use((req, res, next) => {
@@ -14,9 +34,15 @@ app.use((req, res, next) => {
   next()
 })
 
+// Direct routes to appropriate files
+app.use('/api/messages', messages)
+app.use('/api/users', users)
+
 app.get('/', (req, res) => {
   res.send('homepage')
 })
+
+
 
 
 // 500 internal server error handler
@@ -60,5 +86,5 @@ app.use((_req, res) => res.status(404)
   }))
 
 
-let port = 8000
+const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 8000
 app.listen(port, () => { console.log(`Server is up and running on port ${port}`) })

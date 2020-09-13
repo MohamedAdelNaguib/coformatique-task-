@@ -146,3 +146,42 @@ const validId = exports.validId = (res, entityId) => {
   }
   return true
 }
+// exports.replyToMessage = async (res,req)=>{
+//   const data = helperFunctions.getBody(req, res)
+//     if (!data) {
+//       return
+//     }
+//   try{
+//     const entityId = req.params.id
+//     let reply = {'reply' : data}
+//     const updatedEntity = await findByIdAndUpdate(res, entityId, reply)
+    
+//     return res.json({
+//       status: 'Success',
+//       data: updatedEntity
+//     })
+//   }catch(error){
+//     return res.status(400).json({
+//       status: 'Error',
+//       message: error.message
+//     })
+//   }
+// }
+// const findByIdAndUpdate = exports.findByIdAndUpdate = async (res,entityId, data) => {
+//   const entityName = Model.collection.name
+//   const isValidId = validId(res, entityId)
+//   if (!isValidId) {
+//     return false
+//   }
+  
+//   const query = { '_id': entityId }
+//   const updatedEntity = await Model.findByIdAndUpdate(query, data, { new: true })
+//   if (!updatedEntity) {
+//     res.status(400).json({
+//       status: 'Error',
+//       message: `Could not find the ${entityName} you are looking for!`
+//     })
+//     return false
+//   }
+//   return updatedEntity
+// }

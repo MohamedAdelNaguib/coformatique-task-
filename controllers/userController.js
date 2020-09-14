@@ -23,6 +23,7 @@ exports.signUp = async (req, res) => {
       if (!validated) {
         return
       }
+      console.log(data)
       const password = data.password
       if (password) {
         if (passwordRegx.test(password)) {

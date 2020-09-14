@@ -5,9 +5,9 @@ const controller = require('../../controllers/userController')
 // Read all Admins (Default route)
 // router.get('/', controller.default)
 // sign up
-router.post('/',controller.signUp)
+router.post('/register',controller.signUp)
 // sign in
-router.put('/login',controller.login)
+router.post('/login',controller.login)
 router.get('/showMyRecievedMessages/:id',  passport.authenticate('jwt', { session: false }),controller.showMyRecievedMessages)
 
 // router.put('/:id', controller.update)

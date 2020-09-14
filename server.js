@@ -20,6 +20,8 @@ app.use(passport.initialize())
 // DB Config
 const db = require('./config/keys').mongoURI
 // Connect to mongoDB
+// // Passport configuration
+require('./config/passport')(passport)
 mongoose
   .connect(db, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
   .then(() => console.log('Connected to MongoDB'))

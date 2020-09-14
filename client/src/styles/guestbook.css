@@ -1,0 +1,72 @@
+body{
+    background-color:#ebecf0;
+}
+.message{
+    border: none;
+    background: #ebecf0;
+    box-shadow:-4px -4px 12px rgb(255, 255, 255), 4px 4px 12px rgba(121, 130, 160, 0.747);
+    border-radius: 35px;
+}
+
+.btn
+{
+    position: relative;
+    width: 60%;
+    padding:10px ;
+    box-shadow:-4px -4px 12px rgb(255, 255, 255),
+     4px 4px 12px rgba(121, 130, 160, 0.747);
+     background: linear-gradient(to right, #0c3283, rgb(18, 22, 82));
+     outline: none;
+     border: none;
+     font-size: 18px;
+     border-radius: 50px;
+     margin-bottom:  15px;
+     color:   #ebecf0;
+     font-weight: 500;
+     font-size: x-large;
+     font-family: 'Poppins',sans-serif;
+     display: inline-block;
+}
+.btn:hover {
+    color:  #ebecf0 ;
+    box-shadow:inset -2px -2px 6px rgb(255, 255, 255),
+    
+}
+.btn:active
+{
+    box-shadow:inset -2px -2px 6px rgb(255, 255, 255),
+    inset 2px 2px 6px rgba(121, 130, 160, 0.747);
+    color: #ebecf0;
+  
+}
+
+.messagecontent{
+    border-radius: 35px;
+    outline: none;
+    border: none;
+    padding: 5px 15px;
+    background:#ebecf0;
+    color: #8a92a5;
+    box-shadow:inset -4px -4px 8px rgb(255, 255, 255),
+    inset 4px 4px 8px rgba(121, 130, 160, 0.747);
+}
+h4{
+    background: #374134;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.profileimg {
+    height: 60px;
+    border-radius: 50%;
+    outline: none;
+    border: none;
+    
+  }
+
+  .navbar{
+    background: linear-gradient(to right, #0c3283, rgb(18, 22, 82));
+    box-shadow:-4px -4px 12px rgb(255, 255, 255),
+     4px 4px 12px rgba(121, 130, 160, 0.747);
+    border-bottom-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+  }

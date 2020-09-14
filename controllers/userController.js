@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
           firstName: user.firstName,
           email: user.email
         }
-        const token = jwt.sign(payload, tokenKey, { expiresIn: '2h' })
+        const token = jwt.sign(payload, tokenKey, { expiresIn: '12h' })
         return res.json({
           status: 'Success',
           token: `Bearer ${token}`,
